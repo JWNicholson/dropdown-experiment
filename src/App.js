@@ -1,22 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-     <div className="container">
-       <button type="button" className="toggle">X</button>
-       <div className="dropdown">
-         <ul>
-           <li>AAAA</li>
-           <li>BBBB</li>
-           <li>CCCC</li>
-         </ul>
-       </div>
-     </div>
-    </div>
-  );
+class App extends Component {
+  container = React.createRef();
+  state = {
+    open: false,
+  };
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleOutsideClick);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleOutsideClick);
+  }
+  handleOutsideClick = event => {
+    if (this.container.current && !this.container.current.contains(event.target)) {
+      this.setState({
+        open: false,
+      });
+    }
+  };
+  handleButtonClick = () => {
+    this.setState(state => {
+      return {
+        open: !state.open,
+      };
+    });
+  };
+  render() {
+    return (
+      <div className="App">
+        <div className="container" ref={this.container}>
+          <button type="button" class="button" onClick={this.handleButtonClick}>
+            ☰
+          </button>
+          {this.state.open && (
+            <div class="container">
+              <ul>
+                <li>Option 1</li>
+                <li>Option 2</li>
+                <li>Option 3</li>
+                <li>Option 4</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
